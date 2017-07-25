@@ -1,7 +1,13 @@
 # SudokuSolver
 An F# program for solving sudoku puzzles
 
-A simple F# program for solving Sudoku puzzles. Usage:
+A simple command line based F# program for solving Sudoku puzzles. 
+
+Compiling:
+
+This is a Visual Studio 2015 project - to compile, open the solution file SudokuSolver.sln in Visual Studio, and select Build > Build Solution
+
+Command line usage:
 
     SudokuSolver <puzzle>
 
