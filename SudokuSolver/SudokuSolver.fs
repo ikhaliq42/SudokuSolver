@@ -1,5 +1,9 @@
 ﻿module Solver
 
+open System
+
+exception UnsolvableException of string
+
 // convert a string of digits representing the puzzle to a list of ints
 let intStringToList intString = intString |> Seq.map (string >> int) |> Seq.toList 
 
@@ -67,16 +71,20 @@ let solution puzzle =
                              |> Set.ofList
         newSolvedSet, newUnsolvedSet
 
-    let rec solver (solvedSet, unsolvedSet) =
-       if unsolvedSet |> Set.isEmpty then 
-            (solvedSet, unsolvedSet)
+    let rec solver ((solvedSet, unsolvedSet), lastUnsolvedCount) =
+        let currentUnsolvedSize = unsolvedSet |> Set.count
+        if currentUnsolvedSize = lastUnsolvedCount then
+            raise (UnsolvableException(sprintf "Puzzle is unsolvable"))
+        elif unsolvedSet |> Set.isEmpty then 
+            (solvedSet, unsolvedSet), currentUnsolvedSize
         else
-            solver (sweep (solvedSet, unsolvedSet))
+            solver (sweep (solvedSet, unsolvedSet), currentUnsolvedSize)
     
-    let solvedSet, unsolvedSet = solver (intialSolvedSet puzzle, intialUnsolvedSet puzzle)
+    let initSolvedSet = intialSolvedSet puzzle
+    let initUnsolvedSet = intialUnsolvedSet puzzle
+    let ((solvedSet, unsolvedSet), l) = solver ((initSolvedSet, initUnsolvedSet), -1)
 
     [ for r in 1 .. gridSize do for c in 1 .. gridSize do yield solvedSet |> Map.find (r,c) ]
-
 
 let solvePuzzle puzzle =
     
@@ -89,10 +97,13 @@ let solvePuzzle puzzle =
         let cube_root_trunc = truncate cube_root
         if square_root = square_root_trunc && cube_root = cube_root_trunc then true else false
 
+    let isValidContent puzzle =
+        puzzle |> Seq.skipWhile(Char.IsDigit) |> Seq.isEmpty
+
     // check that puzzle is valid - various tests can be added here
-    let isValidPuzzle = isValidSize puzzle
+    let isValidPuzzle = isValidSize puzzle && isValidContent puzzle
 
     if isValidPuzzle then 
         intListToString (solution puzzle)
     else 
-        "Error: Invalid puzzle."
+        raise (ArgumentException("Invalid puzzle."))

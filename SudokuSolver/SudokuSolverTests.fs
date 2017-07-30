@@ -1,6 +1,7 @@
 ﻿module SudokuSolverTests
 
 open Solver
+open System
 open NUnit.Framework
 open FSharp.Data
 
@@ -14,11 +15,19 @@ let ``Test a valid 9x9 puzzle`` () =
     Assert.AreEqual(solutionString, mySolutionString)
 
 [<Test>]
-let ``Test an invalid puzzle`` () =
+let ``Test a puzzle of invalid length`` () =
     let puzzleString = "0043002090050090010700600430060020871900074000500830006000001050035086900"
-    let solutionString = "Error: Invalid puzzle."
-    let mySolutionString = solvePuzzle puzzleString
-    Assert.AreEqual(solutionString, mySolutionString)
+    Assert.Throws<ArgumentException>(fun () -> solvePuzzle puzzleString |> ignore) |> ignore
+
+[<Test>]
+let ``Test a puzzle with invalid elements`` () =
+    let puzzleString = "004300209005009001070060A4300600208719000740005008300060£000105003508690042910300"
+    Assert.Throws<ArgumentException>(fun () -> solvePuzzle puzzleString |> ignore) |> ignore
+
+[<Test>]
+let ``Test an unsolvable 9x9 puzzle`` () =
+    let puzzleString = "000000200005000001000060000006002000100000400000003000000000100000000690040010000"
+    Assert.Throws<UnsolvableException>(fun () -> solvePuzzle puzzleString |> ignore) |> ignore
 
 [<Test>]
 let ``Test a batch of puzzles`` () =
