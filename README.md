@@ -33,6 +33,5 @@ The output will the solution in the same flat format.
 
 TODO:
 
-    - Only solves 9x9 puzzles, need to generalize to other puzzle sizes.
-    - Validation on inputs
+    - Validation on inputs - there is some validation, but it is not comprehensive
     - Exception handling
