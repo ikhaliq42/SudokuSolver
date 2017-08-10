@@ -10,6 +10,22 @@ let intStringToList intString = intString |> Seq.map (string >> int) |> Seq.toLi
 // convert a list of ints to a string
 let intListToString intList = intList |> List.map (fun i -> i.ToString()) |> String.concat ""
 
+// check if puzzle is a valid size - must be a perfect square and perfect cube
+let isValidSize puzzle =    
+    let l = String.length puzzle
+    let square_root = sqrt (float l)
+    let cube_root = sqrt (square_root)
+    let square_root_trunc =  truncate square_root
+    let cube_root_trunc = truncate cube_root
+    if square_root = square_root_trunc && cube_root = cube_root_trunc then true else false
+    
+// check if puzzle content is valid i.e. digits only
+let isValidContent puzzle =
+    puzzle |> Seq.skipWhile(Char.IsDigit) |> Seq.isEmpty
+
+// check that puzzle is valid - various tests can be added here
+let isValidPuzzle puzzle = isValidSize puzzle && isValidContent puzzle
+
 // calculate the solution and return as a list
 let solution puzzle = 
 
@@ -88,22 +104,7 @@ let solution puzzle =
 
 let solvePuzzle puzzle =
     
-    // check if puzzle is a valid size - must be a perfect square and perfect cube
-    let isValidSize puzzle =    
-        let l = String.length puzzle
-        let square_root = sqrt (float l)
-        let cube_root = sqrt (square_root)
-        let square_root_trunc =  truncate square_root
-        let cube_root_trunc = truncate cube_root
-        if square_root = square_root_trunc && cube_root = cube_root_trunc then true else false
-
-    let isValidContent puzzle =
-        puzzle |> Seq.skipWhile(Char.IsDigit) |> Seq.isEmpty
-
-    // check that puzzle is valid - various tests can be added here
-    let isValidPuzzle = isValidSize puzzle && isValidContent puzzle
-
-    if isValidPuzzle then 
+    if isValidPuzzle puzzle then 
         intListToString (solution puzzle)
     else 
         raise (ArgumentException("Invalid puzzle."))
