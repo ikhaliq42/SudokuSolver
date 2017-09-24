@@ -60,6 +60,7 @@ let solution puzzle =
         let flatPuzzle = intStringToList puzzleString 
         [ for i,k in (flatPuzzle |> List.indexed) do if k = 0 then yield rowAndCol gridSize i]
         |> Set.ofList
+
     // find all solved values in the same row, column or sub-grid as cell r,c
     // but not r,c itself
     let cannotBe r c solutionSet =
