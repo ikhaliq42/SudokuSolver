@@ -29,7 +29,7 @@ Then the command line will be as follows:
 
     SudokuSolver 004300209005009001070060043006002087190007400050083000600000105003508690042910300
 
-The output will the solution in the same flat format.
+The solution will be output in the same flat format.
 
 TODO:
 
